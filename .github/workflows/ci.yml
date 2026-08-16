@@ -12,26 +12,44 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          tools: composer
+
       - name: Cek struktur file wajib
         run: |
-          for f in public/index.html public/css/style.css public/js/main.js Dockerfile docker/docker-compose.prod.yml docker/nginx/default.conf; do
+          for f in public/index.php public/css/style.css public/js/main.js \
+                   app/config/config.php app/core/Router.php migrate.php \
+                   Dockerfile docker/docker-compose.prod.yml docker/nginx/default.conf; do
             [ -f "$f" ] || { echo "!! file hilang: $f"; exit 1; }
           done
           echo "== struktur OK =="
 
-      - name: Validasi HTML (index.html)
+      - name: Lint PHP (semua file)
         run: |
-          grep -q '<!DOCTYPE html>' public/index.html || { echo "!! index.html bukan dokumen HTML valid"; exit 1; }
-          grep -q '</html>' public/index.html || { echo "!! index.html tidak ditutup dengan </html>"; exit 1; }
-          echo "== HTML OK =="
+          ERR=0
+          while IFS= read -r file; do
+            php -l "$file" >/dev/null 2>&1 || { echo "!! syntax error: $file"; ERR=1; }
+          done < <(find app public migrate.php -name '*.php' -type f)
+          [ "$ERR" -eq 0 ] || exit 1
+          echo "== PHP lint OK =="
 
       - name: Validasi JS (syntax check)
         run: |
           node --check public/js/main.js || { echo "!! syntax error pada main.js"; exit 1; }
           echo "== JS OK =="
 
-      - name: Validasi CSS (penjaga placeholder)
+      - name: Cek tidak ada placeholder/TODO
         run: |
-          grep -q ':root' public/css/style.css || { echo "!! style.css belum berisi variable tema"; exit 1; }
-          grep -rq "TODO\|Lorem ipsum" public/ && { echo "!! masih ada konten placeholder"; exit 1; } || true
-          echo "== CSS OK =="
+          grep -rq "TODO\|Lorem ipsum" app public && { echo "!! masih ada konten placeholder"; exit 1; } || true
+          echo "== bersih =="
+
+      - name: Validasi compose config
+        env:
+          DB_PASS: ci-placeholder
+          DB_ROOT_PASS: ci-placeholder
+        run: |
+          docker compose -f docker/docker-compose.prod.yml config --quiet || exit 1
+          echo "== compose OK =="

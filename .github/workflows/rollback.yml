@@ -34,19 +34,16 @@ jobs:
             echo "!! image portfolio-html:${TAG} tidak ada di server"; exit 1;
           }
 
-          health_ok() {
-            curl -fsS -o /dev/null http://127.0.0.1:8080/ >/dev/null 2>&1
-          }
-
           echo "== Rollback ke ${TAG} =="
           export IMAGE_TAG="${TAG}"
           docker compose -f "$COMPOSE" --env-file .env up -d
 
-          for i in $(seq 1 15); do health_ok && break; sleep 3; done
-          if health_ok; then
-            echo "${TAG}" >> .deploy-history
-            echo "== Rollback sukses ke ${TAG} =="
-          else
-            echo "!! Rollback ke ${TAG} gagal health check"
-            exit 1
-          fi
+          ok=0
+          for i in $(seq 1 20); do
+            if curl -fsS -o /dev/null http://127.0.0.1:8080/; then ok=1; break; fi
+            sleep 3
+          done
+          [ "$ok" -eq 1 ] || { echo "!! Rollback ke ${TAG} gagal health check"; exit 1; }
+
+          echo "${TAG}" >> .deploy-history
+          echo "== Rollback sukses ke ${TAG} =="

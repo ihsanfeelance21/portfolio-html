@@ -2,6 +2,10 @@
 .env
 .deploy-history
 
+# Upload pengguna (volume docker, jangan di-commit)
+public/uploads/*
+!public/uploads/.gitkeep
+
 # OS
 .DS_Store
 Thumbs.db

@@ -32,30 +32,61 @@ jobs:
             --exclude '.git' --exclude '.env' --exclude '.deploy-history' \
             deploy-src/ /opt/portfolio/prod/
 
-      - name: Deploy stack portofolio
+      - name: Siapkan .env (kredensial DB jika belum ada)
+        run: |
+          set -e
+          cd /opt/portfolio/prod
+          if [ ! -f .env ]; then
+            {
+              echo "PORT=8080"
+              echo "DB_NAME=portfolio_db"
+              echo "DB_USER=portfolio"
+              echo "DB_PASS=$(openssl rand -hex 16)"
+              echo "DB_ROOT_PASS=$(openssl rand -hex 16)"
+              echo "BASE_URL=http://localhost:8080"
+              echo "ADMIN_USERNAME=admin"
+              echo "ADMIN_PASSWORD=$(openssl rand -hex 8)"
+            } > .env
+            chmod 600 .env
+            echo "!! .env dibuat (kosongkan nilai BASE_URL/ADMIN_PASSWORD lalu isi ulang)"
+          else
+            grep -q '^DB_PASS=' .env || {
+              echo "!! .env tanpa DB_PASS, menambahkan kredensial DB"
+              echo "DB_NAME=portfolio_db" >> .env
+              echo "DB_USER=portfolio" >> .env
+              echo "DB_PASS=$(openssl rand -hex 16)" >> .env
+              echo "DB_ROOT_PASS=$(openssl rand -hex 16)" >> .env
+            }
+            echo "!! Pastikan BASE_URL di .env sudah sesuai IP server"
+          fi
+
+      - name: Build & up stack
         env:
           IMAGE_TAG: ${{ github.sha }}
         run: |
           set -e
           cd /opt/portfolio/prod
-          if [ ! -f .env ]; then
-            echo "PORT=8080" > .env
-            echo "!! .env belum ada, dibuat dengan PORT=8080 (default)"
-          fi
-
-          health_ok() {
-            curl -fsS -o /dev/null http://127.0.0.1:8080/ >/dev/null 2>&1
-          }
-
-          echo "== Build & up dengan tag ${IMAGE_TAG} =="
           docker compose -f docker/docker-compose.prod.yml --env-file .env build
           docker compose -f docker/docker-compose.prod.yml --env-file .env up -d
 
-          for i in $(seq 1 15); do health_ok && break; sleep 3; done
-          if health_ok; then
-            echo "${IMAGE_TAG}" >> .deploy-history
-            echo "== Deploy portofolio sukses (${IMAGE_TAG}) =="
-          else
-            echo "!! Deploy gagal health check http://127.0.0.1:8080"
-            exit 1
-          fi
+      - name: Jalankan migrasi & seed
+        run: |
+          set -e
+          bash /opt/portfolio/prod/scripts/migrate.sh
+
+      - name: Health check
+        run: |
+          set -e
+          cd /opt/portfolio/prod
+          ok=0
+          for i in $(seq 1 20); do
+            if curl -fsS -o /dev/null http://127.0.0.1:8080/; then ok=1; break; fi
+            sleep 3
+          done
+          [ "$ok" -eq 1 ] || { echo "!! Health check gagal"; exit 1; }
+          echo "== Health check OK =="
+
+      - name: Catat tag ke history (untuk rollback)
+        run: |
+          echo "${{ github.sha }}" >> /opt/portfolio/prod/.deploy-history
+          echo "== Deploy sukses (${{ github.sha }}) =="

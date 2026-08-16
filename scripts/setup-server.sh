@@ -35,7 +35,7 @@ done
 REPO_URL="https://github.com/ihsanfeelance21/portfolio-html"
 
 echo "== Prasyarat =="
-for bin in docker curl tar; do
+for bin in docker curl tar openssl; do
   command -v "$bin" >/dev/null 2>&1 || { echo "!! $bin belum terinstall"; exit 1; }
 done
 docker info >/dev/null 2>&1 || { echo "!! docker daemon tidak jalan (coba: sudo systemctl start docker)"; exit 1; }
@@ -75,8 +75,20 @@ fi
 echo "== Siapkan $APP_DIR =="
 mkdir -p "$APP_DIR"
 if [ ! -f "$APP_DIR/.env" ]; then
-  printf 'PORT=%s\n' "$PORT" > "$APP_DIR/.env"
-  echo "   .env dibuat (PORT=$PORT)"
+  {
+    printf 'PORT=%s\n' "$PORT"
+    printf 'DB_NAME=portfolio_db\n'
+    printf 'DB_USER=portfolio\n'
+    printf 'DB_PASS=%s\n' "$(openssl rand -hex 16)"
+    printf 'DB_ROOT_PASS=%s\n' "$(openssl rand -hex 16)"
+    printf 'BASE_URL=http://IP_SERVER:%s\n' "$PORT"
+    printf 'ADMIN_USERNAME=admin\n'
+    printf 'ADMIN_PASSWORD=%s\n' "$(openssl rand -hex 8)"
+  } > "$APP_DIR/.env"
+  echo "   .env dibuat (PORT=$PORT, kredensial DB & admin digenerate acak)"
+  echo "   !! GANTI BASE_URL di $APP_DIR/.env dengan IP server asli (misal http://192.168.1.20:$PORT)"
+  echo "   !! CATAT ADMIN_PASSWORD dari file .env lalu ganti via panel admin setelah login"
+  chmod 600 "$APP_DIR/.env"
 else
   echo "   .env sudah ada, dibiarkan"
 fi
@@ -85,6 +97,10 @@ echo ""
 echo "== Selesai. Selanjutnya: =="
 echo "  1. Push ke branch main di repo portfolio-html"
 echo "     -> GitHub Actions (label [self-hosted, portfolio]) akan deploy otomatis"
-echo "  2. Akses website: http://IP_SERVER:${PORT}"
-echo "  3. Pastikan port ${PORT} terbuka di firewall:"
+echo "  2. Sebelum deploy pertama, sesuaikan BASE_URL di $APP_DIR/.env"
+echo "     dengan IP server (misal http://192.168.1.20:${PORT})"
+echo "  3. Akses website: http://IP_SERVER:${PORT}"
+echo "     Admin panel: http://IP_SERVER:${PORT}/admin/login"
+echo "     (ADMIN_PASSWORD ada di $APP_DIR/.env, ganti setelah login via menu Pengaturan)"
+echo "  4. Pastikan port ${PORT} terbuka di firewall:"
 echo "     sudo ufw allow ${PORT}/tcp"
