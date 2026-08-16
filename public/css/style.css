@@ -668,6 +668,8 @@ textarea.form-input { resize: vertical; }
 }
 .admin-login-card { width: 100%; max-width: 400px; }
 .admin-login-title { color: var(--accent); font-size: 1.1rem; margin-bottom: 1.25rem; }
+.admin-shell--bare { justify-content: center; }
+.admin-shell--bare .admin-main { max-width: none; padding: 0; }
 
 @media (max-width: 720px) {
   .admin-shell { flex-direction: column; }

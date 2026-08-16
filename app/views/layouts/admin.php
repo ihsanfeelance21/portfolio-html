@@ -12,7 +12,8 @@
   <link rel="stylesheet" href="<?= url('/css/style.css') ?>" />
 </head>
 <body class="admin-body">
-  <div class="admin-shell">
+  <div class="admin-shell<?= Auth::check() ? '' : ' admin-shell--bare' ?>">
+    <?php if (Auth::check()): ?>
     <aside class="admin-sidebar">
       <a class="admin-brand mono" href="<?= url('/admin') ?>">ihsan_admin_</a>
       <nav class="admin-nav">
@@ -28,6 +29,7 @@
         <a class="admin-link" href="<?= url('/admin/logout') ?>">↪ Logout</a>
       </div>
     </aside>
+    <?php endif; ?>
 
     <main class="admin-main">
       <?= $content ?>
