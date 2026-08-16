@@ -1,0 +1,15 @@
+# Environment / secrets
+.env
+.deploy-history
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Tooling
+node_modules/
+*.log

@@ -1,0 +1,14 @@
+# PRODUCTION stack portofolio (mirror pola webrent)
+# - Container nginx:alpine melayani file statis dari public/
+# - Port default 8080 (80 sudah dipakai stack webrent), hanya terikat ke localhost
+# - Image di-tag dengan IMAGE_TAG agar mudah rollback
+
+services:
+  portfolio:
+    build:
+      context: ../
+      dockerfile: Dockerfile
+    image: portfolio-html:${IMAGE_TAG:-latest}
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${PORT:-8080}:80"

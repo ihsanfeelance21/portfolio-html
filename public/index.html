@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Portofolio Muhamad Ihsan Kurniawan — Career Switcher menuju Backend & Infrastructure Engineer. Linux, Networking, Docker, PHP, CodeIgniter." />
+  <title>Muhamad Ihsan Kurniawan — Backend & Infrastructure Engineer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>" />
+</head>
+<body>
+  <!-- ===== NAVBAR ===== -->
+  <header class="navbar" id="navbar">
+    <nav class="container nav-inner">
+      <a href="#beranda" class="brand">ihsan<span class="brand-caret">_</span></a>
+      <button class="nav-toggle" id="navToggle" aria-label="Buka menu navigasi" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#beranda" class="nav-link active">Beranda</a></li>
+        <li><a href="#tentang" class="nav-link">Tentang</a></li>
+        <li><a href="#skills" class="nav-link">Skills</a></li>
+        <li><a href="#proyek" class="nav-link">Proyek</a></li>
+        <li><a href="#roadmap" class="nav-link">Roadmap</a></li>
+        <li><a href="#kontak" class="nav-link">Kontak</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <!-- ===== HERO ===== -->
+    <section id="beranda" class="hero">
+      <div class="container hero-grid">
+        <div class="hero-text reveal">
+          <p class="hero-eyebrow">// sistem.up --status</p>
+          <h1 class="hero-title">
+            Muhamad Ihsan <span class="accent">Kurniawan</span>
+          </h1>
+          <p class="hero-role" id="typewriter">Career Switcher → Backend &amp; Infrastructure Engineer</p>
+          <p class="hero-sub">
+            Berpengalaman di IT Operations &amp; Network Infrastructure untuk institusi pendidikan.
+            Sedang membangun ekosistem infrastruktur pribadi berbasis <strong>Ubuntu Server</strong>,
+            sambil bertransisi menjadi <strong>Backend &amp; Infrastructure Engineer</strong>.
+          </p>
+          <div class="hero-actions">
+            <a href="#proyek" class="btn btn-primary">Lihat Proyek</a>
+            <a href="#kontak" class="btn btn-ghost">Hubungi Saya</a>
+          </div>
+          <div class="hero-meta mono">
+            <span>📍 Banyuwangi, Jawa Timur</span>
+            <span>🎓 Mahasiswa Informatika @ SiberMu</span>
+          </div>
+        </div>
+
+        <div class="terminal reveal" aria-label="Terminal simulasi">
+          <div class="terminal-bar">
+            <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+            <span class="terminal-title mono">ihsan@homelab: ~/portfolio</span>
+          </div>
+          <div class="terminal-body mono" id="terminalBody">
+            <p><span class="prompt">$</span> whoami</p>
+            <p class="ok">muhamad-ihsan-kurniawan</p>
+            <p><span class="prompt">$</span> cat role.txt</p>
+            <p class="ok">it-ops → backend &amp; infrastructure engineer</p>
+            <p><span class="prompt">$</span> ls ./skills</p>
+            <p class="ok">linux/  networking/  docker/  php/  ci4/  laravel/</p>
+            <p><span class="prompt">$</span> ./switch-career --status</p>
+            <p class="ok">ACTIVE <span class="blink">▊</span></p>
+          </div>
+        </div>
+      </div>
+      <a href="#tentang" class="scroll-hint mono" aria-label="Scroll ke bawah">▼ scroll</a>
+    </section>
+
+    <!-- ===== TENTANG ===== -->
+    <section id="tentang" class="section">
+      <div class="container">
+        <h2 class="section-title reveal"><span class="hash mono">01.</span> Tentang Saya</h2>
+        <div class="about-grid">
+          <div class="about-story reveal">
+            <p>
+              Halo, saya <strong>Muhamad Ihsan Kurniawan</strong> — sedang menempuh pendidikan
+              Informatika di <strong>SiberMu</strong>. Perjalanan saya dimulai dari dunia
+              <strong>IT Operations &amp; Network Infrastructure</strong>, mendukung kebutuhan
+              teknologi institusi pendidikan.
+            </p>
+            <p>
+              Pengalaman itu membuka mata saya: dunia teknologi tidak hanya soal kode, tapi juga
+              <strong>infrastruktur yang menopangnya</strong>. Karena itu saya memutuskan
+              <em>switch career</em> — membangun ulang fondasi dari Linux, Networking, dan
+              Backend Development, lalu mendokumentasikan semuanya secara terbuka lewat
+              <strong>Project Ascend</strong>.
+            </p>
+            <p>
+              Prinsip saya sederhana: <em>build, deploy, document, improve</em> — setiap proyek
+              dikerjakan, di-deploy, dan terus diperbaiki di homelab saya sendiri.
+            </p>
+          </div>
+
+          <div class="timeline reveal">
+            <div class="tl-item">
+              <span class="tl-marker"></span>
+              <div class="tl-card">
+                <span class="tl-tag mono">Sebelum</span>
+                <h3>IT Operations &amp; Network Support</h3>
+                <p>Menopang kebutuhan teknologi &amp; jaringan institusi pendidikan.</p>
+              </div>
+            </div>
+            <div class="tl-item">
+              <span class="tl-marker"></span>
+              <div class="tl-card">
+                <span class="tl-tag mono">Transisi</span>
+                <h3>Membangun Fondasi Ulang</h3>
+                <p>Belajar mandiri Linux, Networking (TCP/IP, DNS, Routing), dan Backend.</p>
+              </div>
+            </div>
+            <div class="tl-item">
+              <span class="tl-marker"></span>
+              <div class="tl-card">
+                <span class="tl-tag mono accent-tag">Sekarang</span>
+                <h3>Project Ascend — Building in Public</h3>
+                <p>Homelab Ubuntu Server, dokumentasi open-source, portofolio bertahap HTML → CI4 → Laravel.</p>
+              </div>
+            </div>
+            <div class="tl-item">
+              <span class="tl-marker"></span>
+              <div class="tl-card">
+                <span class="tl-tag mono">Tujuan</span>
+                <h3>Backend &amp; Infrastructure Engineer</h3>
+                <p>Berkontribusi di tim yang membangun sistem &amp; infrastruktur berskala nyata.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SKILLS ===== -->
+    <section id="skills" class="section section-alt">
+      <div class="container">
+        <h2 class="section-title reveal"><span class="hash mono">02.</span> Skills</h2>
+        <div class="skills-grid">
+          <div class="skill-card reveal">
+            <h3>💻 Backend</h3>
+            <ul class="tag-list">
+              <li>PHP</li>
+              <li>CodeIgniter 4</li>
+              <li>Laravel</li>
+              <li>HTML</li>
+              <li>CSS</li>
+              <li>JavaScript</li>
+            </ul>
+          </div>
+          <div class="skill-card reveal">
+            <h3>🐧 Infrastructure</h3>
+            <ul class="tag-list">
+              <li>Ubuntu Server</li>
+              <li>Linux</li>
+              <li>Nginx</li>
+              <li>Docker</li>
+              <li>Git</li>
+            </ul>
+          </div>
+          <div class="skill-card reveal">
+            <h3>🌐 Networking</h3>
+            <ul class="tag-list">
+              <li>TCP/IP</li>
+              <li>DNS</li>
+              <li>Routing</li>
+              <li>Network Design</li>
+            </ul>
+          </div>
+          <div class="skill-card reveal">
+            <h3>☁️ DevOps &amp; Cloud</h3>
+            <ul class="tag-list">
+              <li>GitHub Actions</li>
+              <li>Docker Compose</li>
+              <li>Cloud Computing</li>
+              <li>CI/CD</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PROYEK ===== -->
+    <section id="proyek" class="section">
+      <div class="container">
+        <h2 class="section-title reveal"><span class="hash mono">03.</span> Proyek &amp; Dokumentasi</h2>
+        <p class="section-desc reveal">
+          Setiap proyek dikerjakan, di-deploy, dan didokumentasikan di homelab —
+          membangun secara terbuka dari hari ke hari.
+        </p>
+        <div class="project-grid" id="projectGrid">
+          <!-- di-render oleh js/main.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== ROADMAP ===== -->
+    <section id="roadmap" class="section section-alt">
+      <div class="container">
+        <h2 class="section-title reveal"><span class="hash mono">04.</span> Project Ascend</h2>
+        <p class="section-desc reveal">
+          Roadmap transisi karier saya — <strong>building in public</strong>.
+        </p>
+
+        <div class="ascend reveal">
+          <div class="ascend-overall">
+            <div class="ascend-label mono"><span>Overall Progress</span><span id="ascendPct">0%</span></div>
+            <div class="progress-track"><div class="progress-fill" id="ascendBar" style="width:0%"></div></div>
+          </div>
+          <ol class="ascend-list">
+            <li class="done" data-w="100"><span class="mono">✔</span> Hardware Preparation</li>
+            <li data-w="15"><span class="mono">▸</span> Ubuntu Server Setup</li>
+            <li data-w="35"><span class="mono">▸</span> Linux &amp; Networking Foundation</li>
+            <li data-w="50"><span class="mono">▸</span> Portfolio HTML <em>(kamu di sini)</em></li>
+            <li data-w="0"><span class="mono">○</span> Portfolio CodeIgniter</li>
+            <li data-w="0"><span class="mono">○</span> Docker &amp; CI/CD</li>
+            <li data-w="0"><span class="mono">○</span> Portfolio Laravel</li>
+            <li data-w="0"><span class="mono">○</span> Production Homelab</li>
+            <li data-w="0"><span class="mono">○</span> Cloud Deployment</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== KONTAK ===== -->
+    <section id="kontak" class="section">
+      <div class="container">
+        <h2 class="section-title reveal"><span class="hash mono">05.</span> Kontak</h2>
+        <p class="section-desc reveal">
+          Terbuka untuk diskusi, kolaborasi, dan peluang <strong>Backend &amp; Infrastructure</strong>.
+        </p>
+        <div class="contact-grid reveal">
+          <a class="contact-card" href="mailto:ihsanfreelance21@gmail.com">
+            <span class="contact-icon">✉️</span>
+            <span class="contact-label mono">EMAIL</span>
+            <span class="contact-value">ihsanfreelance21@gmail.com</span>
+          </a>
+          <a class="contact-card" href="https://github.com/ihsanfeelance21" target="_blank" rel="noopener">
+            <span class="contact-icon">🐙</span>
+            <span class="contact-label mono">GITHUB</span>
+            <span class="contact-value">@ihsanfeelance21</span>
+          </a>
+          <a class="contact-card" href="https://www.instagram.com/kakrantau/" target="_blank" rel="noopener">
+            <span class="contact-icon">📸</span>
+            <span class="contact-label mono">INSTAGRAM</span>
+            <span class="contact-value">@kakrantau</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p class="mono">$ echo "Muhamad Ihsan Kurniawan" © 2026</p>
+      <p class="mono">built with &lt;/&gt; on Ubuntu Server &amp; Nginx — deployed via CI/CD</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

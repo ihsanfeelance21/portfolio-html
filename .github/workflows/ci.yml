@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cek struktur file wajib
+        run: |
+          for f in public/index.html public/css/style.css public/js/main.js Dockerfile docker/docker-compose.prod.yml docker/nginx/default.conf; do
+            [ -f "$f" ] || { echo "!! file hilang: $f"; exit 1; }
+          done
+          echo "== struktur OK =="
+
+      - name: Validasi HTML (index.html)
+        run: |
+          grep -q '<!DOCTYPE html>' public/index.html || { echo "!! index.html bukan dokumen HTML valid"; exit 1; }
+          grep -q '</html>' public/index.html || { echo "!! index.html tidak ditutup dengan </html>"; exit 1; }
+          echo "== HTML OK =="
+
+      - name: Validasi JS (syntax check)
+        run: |
+          node --check public/js/main.js || { echo "!! syntax error pada main.js"; exit 1; }
+          echo "== JS OK =="
+
+      - name: Validasi CSS (penjaga placeholder)
+        run: |
+          grep -q ':root' public/css/style.css || { echo "!! style.css belum berisi variable tema"; exit 1; }
+          grep -rq "TODO\|Lorem ipsum" public/ && { echo "!! masih ada konten placeholder"; exit 1; } || true
+          echo "== CSS OK =="

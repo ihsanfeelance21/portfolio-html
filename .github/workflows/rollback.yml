@@ -1,0 +1,52 @@
+name: Rollback
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Image tag / commit SHA (kosongkan = versi sebelumnya)'
+        required: false
+        type: string
+
+concurrency:
+  group: deploy-portfolio
+  cancel-in-progress: false
+
+jobs:
+  rollback:
+    runs-on: [self-hosted, portfolio]
+    steps:
+      - name: Rollback portofolio
+        run: |
+          set -e
+          APP_DIR=/opt/portfolio/prod
+          COMPOSE=docker/docker-compose.prod.yml
+          cd "$APP_DIR"
+          [ -f .env ] || { echo "!! .env tidak ada"; exit 1; }
+
+          TAG="${{ github.event.inputs.tag }}"
+          if [ -z "$TAG" ]; then
+            TAG=$(grep -E '.+' .deploy-history | tail -2 | head -1)
+          fi
+          [ -z "$TAG" ] && { echo "!! tidak ada versi sebelumnya"; exit 1; }
+
+          docker image inspect "portfolio-html:${TAG}" >/dev/null 2>&1 || {
+            echo "!! image portfolio-html:${TAG} tidak ada di server"; exit 1;
+          }
+
+          health_ok() {
+            curl -fsS -o /dev/null http://127.0.0.1:8080/ >/dev/null 2>&1
+          }
+
+          echo "== Rollback ke ${TAG} =="
+          export IMAGE_TAG="${TAG}"
+          docker compose -f "$COMPOSE" --env-file .env up -d
+
+          for i in $(seq 1 15); do health_ok && break; sleep 3; done
+          if health_ok; then
+            echo "${TAG}" >> .deploy-history
+            echo "== Rollback sukses ke ${TAG} =="
+          else
+            echo "!! Rollback ke ${TAG} gagal health check"
+            exit 1
+          fi

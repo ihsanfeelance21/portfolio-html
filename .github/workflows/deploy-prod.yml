@@ -1,0 +1,61 @@
+name: Deploy Production
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: deploy-portfolio
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, portfolio]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          path: deploy-src
+
+      - name: Install rsync
+        run: |
+          if ! command -v rsync >/dev/null 2>&1; then
+            apt-get update -qq
+            apt-get install -y -qq rsync
+          fi
+
+      - name: Sync kode ke /opt/portfolio/prod
+        run: |
+          set -e
+          mkdir -p /opt/portfolio/prod
+          rsync -a --delete \
+            --exclude '.git' --exclude '.env' --exclude '.deploy-history' \
+            deploy-src/ /opt/portfolio/prod/
+
+      - name: Deploy stack portofolio
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          set -e
+          cd /opt/portfolio/prod
+          if [ ! -f .env ]; then
+            echo "PORT=8080" > .env
+            echo "!! .env belum ada, dibuat dengan PORT=8080 (default)"
+          fi
+
+          health_ok() {
+            curl -fsS -o /dev/null http://127.0.0.1:8080/ >/dev/null 2>&1
+          }
+
+          echo "== Build & up dengan tag ${IMAGE_TAG} =="
+          docker compose -f docker/docker-compose.prod.yml --env-file .env build
+          docker compose -f docker/docker-compose.prod.yml --env-file .env up -d
+
+          for i in $(seq 1 15); do health_ok && break; sleep 3; done
+          if health_ok; then
+            echo "${IMAGE_TAG}" >> .deploy-history
+            echo "== Deploy portofolio sukses (${IMAGE_TAG}) =="
+          else
+            echo "!! Deploy gagal health check http://127.0.0.1:8080"
+            exit 1
+          fi
